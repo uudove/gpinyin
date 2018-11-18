@@ -6,18 +6,31 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 )
 
 var chineseMap map[string]string
 var pinyinMap map[string]string
-var mutilPinyinMap map[string]string
+var multiPinyinMap map[string]string
 
-var mutilPinyinKeys []string
+var multiPinyinKeys []string
+
+var arrayTrie *doubleArrayTrie
 
 var isChineseMapLoaded bool
 var isPinyinMapLoaded bool
-var isMutilChineseMapLoaded bool
+var isMultiChineseMapLoaded bool
+
+func LoadAllDict() error {
+	err := loadChineseDict()
+	if err != nil {
+		return err
+	}
+
+	err = loadPinyinDict()
+	return err
+}
 
 func loadChineseDict() error {
 	if !isChineseMapLoaded {
@@ -51,27 +64,32 @@ func loadPinyinDict() error {
 		isPinyinMapLoaded = true
 	}
 
-	if !isMutilChineseMapLoaded {
-		if mutilPinyinMap == nil {
-			mutilPinyinMap = make(map[string]string)
+	if !isMultiChineseMapLoaded {
+		if multiPinyinMap == nil {
+			multiPinyinMap = make(map[string]string)
 		}
 
 		// init multi pinyin map dict
-		mutilPinyinLoadErr := loadDict(mutilPinyinMap, "data/mutil_pinyin.dict")
-		if mutilPinyinLoadErr != nil {
-			log.Println(mutilPinyinLoadErr.Error())
-			return mutilPinyinLoadErr
+		multiPinyinLoadErr := loadDict(multiPinyinMap, "data/multi_pinyin.dict")
+		if multiPinyinLoadErr != nil {
+			log.Println(multiPinyinLoadErr.Error())
+			return multiPinyinLoadErr
 		}
 
-		mutilPinyinKeys = make([]string, len(mutilPinyinMap))
-
+		// get all multi pinyin keys, and sort them
+		multiPinyinKeys = make([]string, len(multiPinyinMap))
 		index := 0
-		for k, _ := range mutilPinyinMap {
-			mutilPinyinKeys[index] = k
+		for k := range multiPinyinMap {
+			multiPinyinKeys[index] = k
 			index++
 		}
+		sort.Strings(multiPinyinKeys)
 
-		isMutilChineseMapLoaded = true
+		// build multi dict
+		arrayTrie = new(doubleArrayTrie)
+		arrayTrie.build(multiPinyinKeys)
+
+		isMultiChineseMapLoaded = true
 	}
 
 	return nil

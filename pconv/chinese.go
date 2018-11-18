@@ -1,5 +1,13 @@
 package pconv
 
+import (
+	"regexp"
+)
+
+const (
+	chineseRegex = "[\\u4e00-\\u9fa5]"
+)
+
 func ConvertToSimplifiedChinese(text string) (string, error) {
 	err := loadChineseDict()
 	if err != nil {
@@ -47,4 +55,9 @@ func convertToTraditionalChinese(char rune) string {
 		}
 	}
 	return s
+}
+
+func isChinese(c rune) bool {
+	reg := regexp.MustCompile(chineseRegex)
+	return c == chineseLingChar || reg.MatchString(string(c))
 }
