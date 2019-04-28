@@ -1,6 +1,8 @@
 package gpinyin
 
 import (
+	"errors"
+
 	"github.com/uudove/gpinyin/pconv"
 )
 
@@ -21,36 +23,51 @@ const (
 	FormatWithToneNumber = 2
 )
 
-// ConvertToPinyinString convert string to pinyin with specific formats.
+// ConvertToPinyinString - Convert a string to pinyin with specific formats.
 //  - text: the input text to be converted
 //  - separator: the separator between pinyins, can use "" if don't want to put a separator
-//  - format: any of FormatWithToneMark, FormatWithoutTone or FormatWithToneNumber
+//  - format: one of FormatWithToneMark, FormatWithoutTone or FormatWithToneNumber
 func ConvertToPinyinString(text string, separator string, format int) (string, error) {
+	err := validFormat(format)
+	if err != nil {
+		return "", err
+	}
 	return pconv.ConvertToPinyinString(text, separator, format)
-
 }
 
-// ConvertToPinyinArray convert string to pinyin array with specific formats.
+// ConvertToPinyinArray - Convert a string to pinyin array with specific formats.
 //  - text: the input text to be converted
-//  - format: any of FormatWithToneMark, FormatWithoutTone or FormatWithToneNumber
+//  - format: one of FormatWithToneMark, FormatWithoutTone or FormatWithToneNumber
 func ConvertToPinyinArray(text string, format int) ([]string, error) {
+	err := validFormat(format)
+	if err != nil {
+		return nil, err
+	}
 	return pconv.ConvertToPinyinArray(text, format)
 }
 
-// ConvertToSimplifiedChinese convert Traditional Chinese to Simplified Chinese
+// ConvertToSimplifiedChinese - Convert a Traditional Chinese string to Simplified Chinese string
 //  - text: the input text to be converted
 func ConvertToSimplifiedChinese(text string) (string, error) {
 	return pconv.ConvertToSimplifiedChinese(text)
 }
 
-// ConvertToTraditionalChinese convert Simplified Chinese to Traditional Chinese
+// ConvertToTraditionalChinese - Convert a Simplified Chinese string to Traditional Chinese string
 //  - text: the input text to be converted
 func ConvertToTraditionalChinese(text string) (string, error) {
 	return pconv.ConvertToTraditionalChinese(text)
 }
 
 // LoadDict can load dict before use any convertor.
-// If called, the first time call any convertor, will be faster
+// If loaded, the first time call any convertor, will be faster
 func LoadDict() error {
 	return pconv.LoadAllDict()
+}
+
+// validFormat - verify PinyinFormat
+func validFormat(format int) error {
+	if format != FormatWithToneMark && format != FormatWithToneNumber && format != FormatWithoutTone {
+		return errors.New("Invalid format, must be one of FormatWithToneMark, FormatWithoutTone or FormatWithToneNumber")
+	}
+	return nil
 }

@@ -10,13 +10,14 @@ import (
 	"strings"
 )
 
-var chineseMap map[string]string
+var traditionalToSimplifiedMap map[string]string
+var simplifiedToTraditionalMap map[string]string
 var pinyinMap map[string]string
 var multiPinyinMap map[string]string
 
 var multiPinyinKeys []string
 
-var arrayTrie *doubleArrayTrie
+var arrayTrie *DoubleArrayTrie
 
 var isChineseMapLoaded bool
 var isPinyinMapLoaded bool
@@ -34,16 +35,23 @@ func LoadAllDict() error {
 
 func loadChineseDict() error {
 	if !isChineseMapLoaded {
-		if chineseMap == nil {
-			chineseMap = make(map[string]string)
+		if traditionalToSimplifiedMap == nil {
+			traditionalToSimplifiedMap = make(map[string]string)
 		}
-
+		if simplifiedToTraditionalMap == nil {
+			simplifiedToTraditionalMap = make(map[string]string)
+		}
 		// init Chinese map dict
-		chineseLoadErr := loadDict(chineseMap, "data/chinese.dict")
+		chineseLoadErr := loadDict(traditionalToSimplifiedMap, "data/chinese.dict")
 		if chineseLoadErr != nil {
 			log.Println(chineseLoadErr.Error())
 			return chineseLoadErr
 		}
+
+		for k, v := range traditionalToSimplifiedMap {
+			simplifiedToTraditionalMap[v] = k
+		}
+
 		isChineseMapLoaded = true
 	}
 	return nil
@@ -86,7 +94,7 @@ func loadPinyinDict() error {
 		sort.Strings(multiPinyinKeys)
 
 		// build multi dict
-		arrayTrie = new(doubleArrayTrie)
+		arrayTrie = new(DoubleArrayTrie)
 		arrayTrie.build(multiPinyinKeys)
 
 		isMultiChineseMapLoaded = true
