@@ -18,13 +18,19 @@ A pinyin converter project written in golang.
 go get github.com/uudove/gpinyin
 ```
 
+If you're using go modules, just add this below in your `go.mod` file
+
+```
+require github.com/uudove/gpinyin v1.0.0
+```
+
 #### Import gpinyin
 
 ```
 import "github.com/uudove/gpinyin"
 ```
 
-#### Simple to use
+#### Now happy to use
 
 1. Convert a string to pinyin
    
