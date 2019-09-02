@@ -20,7 +20,7 @@ go get github.com/uudove/gpinyin
 如果你在使用go modules, 只需要在你的 `go.mod` 文件中添加如下代码
 
 ```
-require github.com/uudove/gpinyin v1.0.0
+require github.com/uudove/gpinyin v1.0.1
 ```
 
 #### 导入 gpinyin
