@@ -3,24 +3,24 @@ package gpinyin
 import (
 	"errors"
 
-	"github.com/uudove/gpinyin/pconv"
+	"./pconv"
 )
 
 const (
 	// FormatWithToneMark Convert to pinyin with tone mark.
 	// For example:
 	//  - "杭州西湖" -> háng zhōu xī hú
-	FormatWithToneMark = 0
+	FormatWithToneMark = pconv.FormatWithToneMarkInternal
 
 	// FormatWithoutTone Convert to pinyin without tone.
 	// For example:
 	//  - "杭州西湖" -> hang zhou xi hu
-	FormatWithoutTone = 1
+	FormatWithoutTone = pconv.FormatWithoutToneInternal
 
 	// FormatWithToneNumber Convert to pinyin without tone.
 	// For example:
 	//  - "杭州西湖" -> hang2 zhou1 xi1 hu2
-	FormatWithToneNumber = 2
+	FormatWithToneNumber = pconv.FormatWithToneNumberInternal
 )
 
 // ConvertToPinyinString - Convert a string to pinyin with specific formats.

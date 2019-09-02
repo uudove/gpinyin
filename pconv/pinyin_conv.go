@@ -2,7 +2,25 @@ package pconv
 
 import (
 	"bytes"
+	"strconv"
 	"strings"
+)
+
+const (
+	// FormatWithToneMark Convert to pinyin with tone mark.
+	// For example:
+	//  - "杭州西湖" -> háng zhōu xī hú
+	FormatWithToneMarkInternal = iota
+
+	// FormatWithoutTone Convert to pinyin without tone.
+	// For example:
+	//  - "杭州西湖" -> hang zhou xi hu
+	FormatWithoutToneInternal
+
+	// FormatWithToneNumber Convert to pinyin without tone.
+	// For example:
+	//  - "杭州西湖" -> hang2 zhou1 xi1 hu2
+	FormatWithToneNumberInternal
 )
 
 const (
@@ -100,13 +118,13 @@ func convertCharToPinyinArray(c rune, format int) []string {
 }
 
 func formatPinyin(pinyinString string, format int) []string {
-	if format == 0 { // gpinyin.FormatWithToneMark
+	if format == FormatWithToneMarkInternal { // gpinyin.FormatWithToneMark
 		return strings.Split(pinyinString, pinyinSeprator)
 
-	} else if format == 1 { // gpinyin.FormatWithoutTone
+	} else if format == FormatWithoutToneInternal { // gpinyin.FormatWithoutTone
 		return convertWithoutTone(pinyinString)
 
-	} else if format == 2 { // gpinyin.FormatWithToneNumber
+	} else if format == FormatWithToneNumberInternal { // gpinyin.FormatWithToneNumber
 		return convertWithToneNumber(pinyinString)
 	}
 
@@ -136,10 +154,11 @@ func convertWithToneNumber(pinyinString string) []string {
 
 			// 搜索带声调的拼音字母，如果存在则替换为对应不带声调的英文字母
 			if originalChar < 'a' || originalChar > 'z' {
-				indexInAllMarked := strings.Index(allMarkedVowel, string(originalChar))
+				indexInAllMarked := indexOfAllMarked(originalChar)
+				// indexInAllMarked := strings.IndexRune(allMarkedVowel, originalChar)
 				toneNumber := indexInAllMarked%4 + 1 // 声调数
 				replaceChar := allUnmarkedVowelChars[(indexInAllMarked-indexInAllMarked%4)/4]
-				pinyinArray[i] = strings.Replace(originalPinyin, string(originalChar), string(replaceChar), -1) + string(toneNumber)
+				pinyinArray[i] = strings.Replace(originalPinyin, string(originalChar), string(replaceChar), -1) + strconv.Itoa(toneNumber)
 				hasMarkedChar = true
 				break
 			}
@@ -151,4 +170,13 @@ func convertWithToneNumber(pinyinString string) []string {
 	}
 
 	return pinyinArray
+}
+
+func indexOfAllMarked(item rune) int {
+	for i, v := range allMarkedVowelChars {
+		if v == item {
+			return i
+		}
+	}
+	return -1
 }

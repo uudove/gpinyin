@@ -37,6 +37,8 @@ import "github.com/uudove/gpinyin"
 ```
 s := "杭州西湖"
 pinyin, err := gpinyin.ConvertToPinyinString(s, " ", gpinyin.FormatWithToneMark) // pinyin = "háng zhōu xī hú"
+pinyin, err := gpinyin.ConvertToPinyinString(s, ",", gpinyin.FormatWithoutTone) // pinyin = "hang,zhou,xi,hu"
+pinyin, err := gpinyin.ConvertToPinyinString(s, "", gpinyin.FormatWithToneMark) // pinyin = "hang2zhou1xi1hu2"
 ```
 
 2. Convert Simplified Chinese to Traditional Chinese
