@@ -57,7 +57,7 @@ func TestConvertToPinyinStringFormatWithoutTone(t *testing.T) {
 	if err != nil {
 		t.Fatal("ConvertToPinyinString FormatWithoutTone with error: ", err.Error())
 	}
-	if pinyin != "hang zhou xi hu" {
+	if pinyin != "hang,zhou,xi,hu" {
 		t.Fatal("ConvertToPinyinString FormatWithoutTone not match: ", pinyin)
 	}
 }
@@ -69,7 +69,7 @@ func TestConvertToPinyinStringFormatWithToneNumber(t *testing.T) {
 	if err != nil {
 		t.Fatal("ConvertToPinyinString FormatWithToneNumber with error: ", err.Error())
 	}
-	if pinyin != "hang zhou xi hu" {
+	if pinyin != "hang2zhou1xi1hu2" {
 		t.Fatal("ConvertToPinyinString FormatWithToneNumber not match: ", pinyin)
 	}
 }

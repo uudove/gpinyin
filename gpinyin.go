@@ -3,7 +3,7 @@ package gpinyin
 import (
 	"errors"
 
-	"./pconv"
+	"github.com/uudove/gpinyin/pconv"
 )
 
 const (
