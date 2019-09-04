@@ -21,7 +21,7 @@ go get github.com/uudove/gpinyin
 If you're using go modules, just add this below in your `go.mod` file
 
 ```
-require github.com/uudove/gpinyin v1.0.1
+require github.com/uudove/gpinyin v1.0.2
 ```
 
 #### Import gpinyin
